@@ -9,7 +9,7 @@ import SwiftUI
 
 struct WelcomeView: View {
     private enum Path {
-        case signIn
+        case signUp
         case logIn
     }
 
@@ -26,8 +26,8 @@ struct WelcomeView: View {
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding([.leading, .trailing], 60)
                     .padding(.bottom, 24)
-                CommonButton(title: "Sign in", color: .blue) {
-                    path.append(.signIn)
+                CommonButton(title: "Sign Up", color: .blue) {
+                    path.append(.signUp)
                 }
                 .padding([.leading, .trailing], 60)
                 .padding(.bottom, 10)
@@ -40,8 +40,8 @@ struct WelcomeView: View {
                 switch path {
                 case .logIn:
                     LogInView()
-                case .signIn:
-                    SignInView()
+                case .signUp:
+                    SignUpView()
                 }
             }
         }

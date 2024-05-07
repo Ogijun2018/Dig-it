@@ -6,8 +6,15 @@
 //
 
 import SwiftUI
+import AuthenticationServices
 
 struct LogInView: View {
+
+    @State var givenName: String?
+    @State var familyName: String?
+    @State var email: String?
+    @State var error: String?
+
     var body: some View {
         VStack {
             Rectangle()
@@ -16,9 +23,25 @@ struct LogInView: View {
             CommonButton(title: "Sign in with Google", color: .gray) {
                 print("sign in with google")
             }
-            CommonButton(title: "Sign in with Apple", color: .gray) {
-                print("Sign in with Apple")
+            SignInWithAppleButton(.signIn) { request in
+                request.requestedScopes = [.fullName, .email]
+            } onCompletion: { results in
+                switch results {
+                case .success(let auth):
+                    guard let credential = auth.credential as? ASAuthorizationAppleIDCredential else { return }
+                    if let fullName = credential.fullName {
+                        self.givenName = fullName.givenName
+                        self.familyName = fullName.familyName
+                    }
+                    self.email = credential.email
+                    print("sign in success, \(credential.fullName?.givenName), \(credential.email)")
+                case .failure(let error):
+                    self.error = error.localizedDescription
+                }
             }
+            .signInWithAppleButtonStyle(.black)
+            .frame(height: 50)
+            .padding()
             Text("or continue with")
             Text("Email address")
             Text("Password")
